@@ -346,13 +346,14 @@ run = ->
             onDiskFilename = contents.toString('utf8')
         if onDiskFilename
           # stream
-          res.setHeader('content-disposition', "attachment; filename=\"#{filename}\"")
+          res.setHeader('content-disposition', "inline; filename=\"#{filename}\"")
           return fs.createReadStream(path.join(config.getUploadPath(), onDiskFilename)).pipe(res)
 
       if not Buffer.isBuffer(contents)
         return res.status(404).send 'Crash report field is an unknown type'
 
-      res.setHeader('content-disposition', "attachment; filename=\"#{filename}\"")
+      res.setHeader('content-disposition', "inline; filename=\"#{filename}\"")
+      res.setHeader('content-type', "text/plain")
       res.send(contents)
 
   breakpad.get '/api/crashreports', (req, res, next) ->
